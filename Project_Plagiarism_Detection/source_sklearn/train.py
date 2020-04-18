@@ -7,7 +7,7 @@ import pandas as pd
 from sklearn.externals import joblib
 
 ## TODO: Import any additional libraries you need to define a model
-
+from sklearn.ensemble import GradientBoostingClassifier
 
 # Provided model load function
 def model_fn(model_dir):
@@ -38,7 +38,14 @@ if __name__ == '__main__':
     parser.add_argument('--model-dir', type=str, default=os.environ['SM_MODEL_DIR'])
     parser.add_argument('--data-dir', type=str, default=os.environ['SM_CHANNEL_TRAIN'])
     
-    ## TODO: Add any additional arguments that you will need to pass into your model
+    ## TODO: Add any additional arguments that you will need to pass into your model   
+    parser.add_argument('--n-estimators', type=int, default=1000)
+    parser.add_argument('--max-leaf-nodes', type=int, default=4)
+    parser.add_argument('--max-depth', type=int, default=3)
+    parser.add_argument('--random-state', type=int, default=2)
+    parser.add_argument('--min-samples-split', type=int, default=5)
+    
+    
     
     # args holds all passed-in arguments
     args = parser.parse_args()
@@ -52,15 +59,15 @@ if __name__ == '__main__':
     train_x = train_data.iloc[:,1:]
     
     
-    ## --- Your code here --- ##
-    
-
-    ## TODO: Define a model 
-    model = None
-    
+    ## --- Your code here --- ##   
+    model = GradientBoostingClassifier(n_estimators = args.n_estimators,
+                                       max_leaf_nodes = args.max_leaf_nodes,
+                                       max_depth = args.max_depth,
+                                       random_state = args.random_state,
+                                       min_samples_split = args.min_samples_split)
     
     ## TODO: Train the model
-    
+    model.fit(train_x, train_y)
     
     
     ## --- End of your code  --- ##
